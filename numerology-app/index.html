@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>潛能密碼旗艦全能版 - 專業優化版</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root { --bg: #020617; --card: #1e293b; --gold: #fbbf24; --primary: #38bdf8; --wood: #22c55e; --fire: #ef4444; --earth: #eab308; --metal: #f1f5f9; --water: #3b82f6; }
+        body { background: var(--bg); color: white; font-family: -apple-system, sans-serif; margin: 0; padding: 10px; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 650px; }
+        .ui-panel { background: var(--card); border-radius: 40px; padding: 30px; box-shadow: 0 30px 70px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); }
+        
+        .input-group { background: rgba(255,255,255,0.03); padding: 30px; border-radius: 25px; margin-bottom: 25px; border: 1px solid rgba(56,189,248,0.3); text-align: center; }
+        input, select { background: white; color: #333; width: 90%; padding: 15px; border-radius: 12px; border: none; font-size: 1.2rem; margin-bottom: 15px; text-align: center; }
+        
+        .date-select-group { display: flex; gap: 8px; width: 95%; margin: 0 auto 20px; }
+        .date-select-group select { width: 33%; margin-bottom: 0; padding: 12px 5px; cursor: pointer; }
+
+        .btn-main { width: 100%; background: linear-gradient(135deg, #fbbf24, #d97706); color: white; border: none; padding: 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 1.5rem; transition: 0.3s; }
+        .btn-main:active { transform: scale(0.98); }
+        
+        .action-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .btn-share { padding: 16px; border-radius: 18px; border: none; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; }
+        .btn-photo { background: #3b82f6; }
+        .btn-line { background: #06C755; }
+
+        #capture-area { background: #020617; padding: 45px 30px; border-radius: 30px; }
+        
+        .grid-wrapper-master { display: grid; grid-template-columns: 65px 1fr; grid-template-rows: 50px 1fr; gap: 10px; margin: 35px 0; }
+        .side-label-v { display: flex; flex-direction: column; justify-content: space-around; font-size: 1.1rem; color: var(--gold); font-weight: bold; text-align: center; line-height: 1.3; }
+        .top-label-h { display: grid; grid-template-columns: repeat(3, 1fr); font-size: 1.1rem; color: var(--primary); font-weight: bold; text-align: center; align-items: end; }
+        
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; position: relative; z-index: 2; }
+        .cell { background: rgba(255,255,255,0.05); aspect-ratio: 1; border-radius: 20px; display: flex; justify-content: center; align-items: center; position: relative; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; }
+        
+        /* 更新：九宮格數字層級提升並美化 */
+        .num-label { 
+            position: absolute; 
+            font-size: 3.2rem; /* 再放大一點點 */
+            color: rgba(255, 255, 255, 0.35); /* 淺白色，帶透明感 */
+            font-weight: 900; 
+            z-index: 10; /* 確保在最上層 (高於圓圈的 2) */
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5); /* 增加黑影，讓數字在深色圈上也清楚 */
+        }
+        
+        .concentric { position: absolute; border-radius: 50%; border: 3px solid var(--color); z-index: 2; }
+        .c-wood { --color: var(--wood); } .c-fire { --color: var(--fire); } .c-earth { --color: var(--earth); } .c-metal { --color: var(--metal); } .c-water { --color: var(--water); }
+        .c1 { width: 30%; height: 30%; background: var(--color); box-shadow: 0 0 15px var(--color); }
+        .c2 { width: 60%; height: 60%; }
+        .c3 { width: 88%; height: 88%; border-style: dashed; }
+
+        .section-title { color: var(--gold); border-bottom: 3px solid var(--gold); padding: 12px 0 8px; margin: 40px 0 20px; font-weight: bold; text-align: left; font-size: 1.6rem; }
+        .card { background: rgba(255,255,255,0.07); padding: 25px; border-radius: 22px; margin-bottom: 25px; line-height: 1.9; text-align: left; border-left: 8px solid var(--gold); font-size: 1.25rem; }
+        .card-lack { border-left-color: #94a3b8; opacity: 0.9; }
+        .card-warn { border-left-color: #ef4444; }
+        .encouragement { border-left-color: #10b981; font-style: italic; background: linear-gradient(to right, rgba(16, 185, 129, 0.15), transparent); font-size: 1.4rem; color: #d1fae5; }
+        
+        #svg-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .energy-line { stroke: var(--gold); stroke-width: 8; stroke-linecap: round; opacity: 0.6; filter: drop-shadow(0 0 10px var(--gold)); }
+        
+        .footer-tag { margin-top: 40px; font-size: 1rem; opacity: 0.4; text-align: center; letter-spacing: 3px; }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <div class="ui-panel">
+        <h1 style="text-align: center; font-size: 2.2rem; margin-bottom: 30px;">💎 潛能密碼旗艦系統</h1>
+        <div class="input-group">
+            <input type="text" id="userName" placeholder="請輸入姓名">
+            
+            <div style="color: var(--primary); margin-bottom: 10px; font-weight: bold;">選擇出生年月日</div>
+            <div class="date-select-group">
+                <select id="yearSelect"></select>
+                <select id="monthSelect"></select>
+                <select id="daySelect"></select>
+            </div>
+
+            <button class="btn-main" onclick="process()">深度生命全盤分析</button>
+            
+            <div id="shareControls" class="action-group" style="display: none;">
+                <button class="btn-share btn-photo" onclick="captureCard()">💾 儲存專業圖卡</button>
+                <button class="btn-share btn-line" onclick="shareLine()">🟢 LINE 分享</button>
+            </div>
+        </div>
+
+        <div id="results" style="display:none;">
+            <div id="capture-area">
+                <div style="text-align:center;">
+                    <div id="resName" style="font-size:1.4rem; opacity:0.8;"></div>
+                    <div id="resNum" style="font-size:7rem; font-weight:bold; color:var(--gold); line-height:1;"></div>
+                    <div id="resTitle" style="color:var(--primary); font-weight:bold; font-size:2rem; margin-top:15px;"></div>
+                </div>
+
+                <div class="grid-wrapper-master">
+                    <div></div>
+                    <div class="top-label-h">
+                        <div>理性線</div><div>感情線</div><div>感覺線</div>
+                    </div>
+                    <div class="side-label-v">
+                        <div>家<br>庭<br>線</div><div>工<br>作<br>線</div><div>事<br>業<br>線</div>
+                    </div>
+                    <div style="position:relative;">
+                        <svg id="svg-lines"></svg>
+                        <div class="grid" id="grid"></div>
+                    </div>
+                </div>
+
+                <div id="details"></div>
+                <div class="footer-tag">POTENTIAL CODE • 全方位深度分析</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function initDatePicker() {
+    const yearS = document.getElementById('yearSelect');
+    const monthS = document.getElementById('monthSelect');
+    const dayS = document.getElementById('daySelect');
+    const now = new Date();
+    const currentYear = now.getFullYear();
+
+    for(let i = currentYear; i >= 1920; i--) {
+        let opt = new Option(i + " 年", i);
+        if(i === 1990) opt.selected = true;
+        yearS.add(opt);
+    }
+    for(let i = 1; i <= 12; i++) {
+        monthS.add(new Option(i + " 月", i < 10 ? '0'+i : i));
+    }
+    for(let i = 1; i <= 31; i++) {
+        dayS.add(new Option(i + " 日", i < 10 ? '0'+i : i));
+    }
+}
+initDatePicker();
+
+const fullDB = {
+    1: { n: "大樹 (屬木)", f: "獨立、果斷、領袖特質。對事不對人，重視數據及結果。", mk: "講重點、專業導向、給予高度尊重。", w: "主觀意識過強、聽不進建議、容易孤軍奮戰。", l: "缺乏主見、易受人影響、較難獨力完成任務。", a: "練習獨立思考，學著為自己的選擇負責，建立核心自信。", e: "你是天生的領袖，你的果斷將開闢出專屬的道路！" },
+    2: { n: "蔓藤 (屬木)", f: "溫和圓融、細心、包容力強。重視交情程度與人際互動。", mk: "需要陪伴感、幫他做決定、溫柔持續跟進。", w: "優柔寡斷、過度依賴、說話容易得罪人而不自知。", l: "說話太直、不擅長讚美、人際互動較冷淡。", a: "多練習讚美他人，學習在群眾面前溫暖地表達自己。", e: "你的細膩是溫柔的力量，肯定自己，你會更強大。" },
+    3: { n: "大火 (屬火)", f: "活潑創意、熱情、天馬行空。感性大於理性，容易受情緒啟蒙。", mk: "有趣內容、視覺化呈現、強調新奇與快樂。", w: "情緒化、沒耐性、專注力容易被新事物分散。", l: "缺乏聯想力、生活較無趣、幽默感較低。", a: "多接觸藝術、美感事物，學習靜心以提升定力。", e: "你的熱情能點亮所有人！保持赤子之心，世界就是你的畫布。" },
+    4: { n: "燭火 (屬火)", f: "穩重責任、條理分明。擅長在既定框架內執行，極佳執行者。", mk: "提供完整邏輯架構、數據支持、給予安全感。", w: "過於固執、鑽牛角尖、害怕未知的改變。", l: "缺乏安全感、容易緊張、生活缺乏重心。", a: "建立規律的生活節奏，學習情緒管理與內在自信。", e: "你是最可靠的基石，務實會為你累積出驚人的成就。" },
+    5: { n: "驛土 (屬土)", f: "自由奔放、人際圓滿。不喜束縛，追求出眾與讚美。", mk: "投其所好、建立私交、不想被管、節奏要快。", w: "三分鐘熱度、隨遇而安、心口不一。", l: "企圖心弱、安於現狀、不喜變動。", a: "設定短期且明確的目標，並強制自己執行計畫。", e: "自由是你的靈魂，冒險是你的養分。最美風景就在轉彎處。" },
+    6: { n: "軟土 (屬土)", f: "體貼善良、完美主義。母愛性強，習慣照顧他人勝過自己。", mk: "談感性面、強調服務與保障、不給壓力。", w: "容易情緒勒索、愛碎念、因過度承擔而疲憊。", l: "不喜跨出舒適圈、預設定場多、較為被動。", a: "嘗試跨出舒適圈，接受不完美中的美感。", e: "治癒他人的同時也請愛自己，你值得被這世界溫柔對待。" },
+    7: { n: "大金 (屬金)", f: "謹慎分析、追根究柢。理性務實，重視高品質與細節。", mk: "數據要準確、分析要務實、重視質感與證據。", w: "疑心病重、顯得冷漠、愛抓他人語病。", l: "容易漏財、天生路痴、較難信任他人。", a: "養成記帳習慣，練習開放心胸去信任與交友。", e: "智慧能看穿本質，保持觀察力，你必能做對決定。" },
+    8: { n: "熟金 (屬金)", f: "統籌規劃、掌控慾強。機會主義者，重視結果、效率與大格局。", mk: "談大計畫、談效率回報、給予主導權。", w: "控制狂、急功近利、對人壓迫感較大。", l: "凡事親力親為導致勞碌、缺乏效率概念。", a: "學習充分授權，放慢步調，享受生活與當下。", e: "你有掌控大局的氣度。學會舉重若輕，事業將更上一層樓。" },
+    9: { n: "智水 (屬水)", f: "利他分享、大愛奉獻。想像力豐富，具備大愛精神。", mk: "談論夢夢、公益利他、尋求其助人本質。", w: "不切實際、多想少做、濫好人、缺乏金錢觀。", l: "對未來沒概念、月光族、較為現實。", a: "學習規劃未來，多參與志工或分享活動回饋社會。", e: "善良與智慧是珍貴禮物，帶著夢想前行，你會讓世界更美。" }
+};
+
+const linesArr = [{n:"藝術",p:[1,2,3]},{n:"組織",p:[4,5,6]},{n:"權力",p:[7,8,9]},{n:"物質",p:[1,4,7]},{n:"情感",p:[2,5,8]},{n:"智慧",p:[3,6,9]},{n:"事業",p:[1,5,9]},{n:"人際",p:[3,5,7]}];
+
+function process() {
+    const name = document.getElementById('userName').value || "朋友";
+    const y = document.getElementById('yearSelect').value;
+    const m_val = document.getElementById('monthSelect').value;
+    const d_val = document.getElementById('daySelect').value;
+    const dateStr = `${y}${m_val}${d_val}`;
+    
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('shareControls').style.display = 'grid';
+    
+    let cnt = {}; for(let i=1; i<=9; i++) cnt[i] = 0;
+    const raw = dateStr.split('').map(Number);
+    raw.forEach(n => { if(n > 0) cnt[n]++; });
+    
+    let s1 = raw.reduce((a, b) => a + b, 0);
+    addNum(s1, cnt);
+    let cur = s1;
+    while(cur > 9) {
+        let ds = String(cur).split('').map(Number);
+        cur = ds.reduce((a, b) => a + b, 0);
+        addNum(cur, cnt);
+    }
+
+    renderGrid(cnt);
+    drawLines(cnt);
+
+    const m = fullDB[cur];
+    document.getElementById('resName').innerText = `${name} 的全方位能量分析`;
+    document.getElementById('resNum').innerText = `${cur}`;
+    document.getElementById('resTitle').innerText = m.n;
+
+    let dH = `
+        <div class="section-title">✨ 特質與優點</div><div class="card">${m.f}</div>
+        <div class="section-title">🤝 溝通錦囊</div><div class="card">${m.mk}</div>
+    `;
+
+    let lackH = "";
+    for(let i=1; i<=9; i++) {
+        if(cnt[i] === 0) {
+            lackH += `<div class="card card-lack"><b>缺 ${i}：${fullDB[i].n}</b><br>影響：${fullDB[i].l}<br>💡 補強建議：${fullDB[i].a}</div>`;
+        }
+    }
+    if(lackH) dH += `<div class="section-title">🛠 缺數能量修煉</div>` + lackH;
+
+    let warns = "";
+    for(let i=1; i<=9; i++) {
+        if(cnt[i] >= 3) {
+            warns += `<div class="card card-warn"><b>數字 ${i} 能量過強：</b><br>${fullDB[i].w}</div>`;
+        }
+    }
+    if(warns) dH += `<div class="section-title">🛑 能量平衡建議</div>` + warns;
+
+    dH += `<div class="section-title">🌈 給你的靈魂鼓勵</div><div class="card encouragement">「${m.e}」</div>`;
+    document.getElementById('details').innerHTML = dH;
+    
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+function addNum(n, map) { String(n).split('').forEach(s => { let d = parseInt(s); if(d > 0) map[d]++; }); }
+
+function renderGrid(cnt) {
+    let gH = '';
+    for(let i=1; i<=9; i++) {
+        let clr = i<=2?'c-wood':i<=4?'c-fire':i<=6?'c-earth':i<=8?'c-metal':'c-water';
+        let circles = '';
+        for(let j=1; j<=Math.min(cnt[i], 3); j++) circles += `<div class="concentric c${j}"></div>`;
+        // 將數字標籤放在 circles 後面，但透過 CSS z-index 浮上來
+        gH += `<div class="cell ${clr}" id="cell-${i}"><span class="num-label">${i}</span>${circles}</div>`;
+    }
+    document.getElementById('grid').innerHTML = gH;
+}
+
+function drawLines(cnt) {
+    const svg = document.getElementById('svg-lines'); svg.innerHTML = "";
+    const gridEl = document.getElementById('grid');
+    const wrapper = gridEl.getBoundingClientRect();
+    linesArr.forEach(l => {
+        if(cnt[l.p[0]]>0 && cnt[l.p[1]]>0 && cnt[l.p[2]]>0) {
+            const r1 = document.getElementById('cell-'+l.p[0]).getBoundingClientRect();
+            const r3 = document.getElementById('cell-'+l.p[2]).getBoundingClientRect();
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", r1.left-wrapper.left+r1.width/2); line.setAttribute("y1", r1.top-wrapper.top+r1.height/2);
+            line.setAttribute("x2", r3.left-wrapper.left+r3.width/2); line.setAttribute("y2", r3.top-wrapper.top+r3.height/2);
+            line.setAttribute("class", "energy-line"); svg.appendChild(line);
+        }
+    });
+}
+
+function captureCard() {
+    const area = document.getElementById('capture-area');
+    html2canvas(area, { backgroundColor: '#020617', scale: 2, useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `潛能密碼旗艦報告_${document.getElementById('userName').value}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+}
+
+function shareLine() {
+    const name = document.getElementById('userName').value;
+    const num = document.getElementById('resNum').innerText;
+    const text = `我是【${name}】，我的能量密碼是【${num} 號人】！這份分析包含家庭/工作/事業建議！\n${window.location.href}`;
+    window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
+}
+</script>
+</body>
+</html>
