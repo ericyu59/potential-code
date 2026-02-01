@@ -1,13 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>潛能密碼旗艦全能版 - 專業優化版</title>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#fbbf24">
-<meta name="apple-mobile-web-app-capable" content="yes">    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root { --bg: #020617; --card: #1e293b; --gold: #fbbf24; --primary: #38bdf8; --wood: #22c55e; --fire: #ef4444; --earth: #eab308; --metal: #f1f5f9; --water: #3b82f6; }
         body { background: var(--bg); color: white; font-family: -apple-system, sans-serif; margin: 0; padding: 10px; display: flex; justify-content: center; }
@@ -37,15 +34,14 @@
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; position: relative; z-index: 2; }
         .cell { background: rgba(255,255,255,0.05); aspect-ratio: 1; border-radius: 20px; display: flex; justify-content: center; align-items: center; position: relative; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; }
         
-        /* 更新：九宮格數字層級提升並美化 */
         .num-label { 
             position: absolute; 
-            font-size: 3.2rem; /* 再放大一點點 */
-            color: rgba(255, 255, 255, 0.35); /* 淺白色，帶透明感 */
+            font-size: 3.2rem; 
+            color: rgba(255, 255, 255, 0.35); 
             font-weight: 900; 
-            z-index: 10; /* 確保在最上層 (高於圓圈的 2) */
+            z-index: 10; 
             pointer-events: none;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5); /* 增加黑影，讓數字在深色圈上也清楚 */
+            text-shadow: 0 0 10px rgba(0,0,0,0.5); 
         }
         
         .concentric { position: absolute; border-radius: 50%; border: 3px solid var(--color); z-index: 2; }
@@ -56,6 +52,7 @@
 
         .section-title { color: var(--gold); border-bottom: 3px solid var(--gold); padding: 12px 0 8px; margin: 40px 0 20px; font-weight: bold; text-align: left; font-size: 1.6rem; }
         .card { background: rgba(255,255,255,0.07); padding: 25px; border-radius: 22px; margin-bottom: 25px; line-height: 1.9; text-align: left; border-left: 8px solid var(--gold); font-size: 1.25rem; }
+        .card-line { border-left-color: var(--primary); background: linear-gradient(to right, rgba(56,189,248,0.1), transparent); }
         .card-lack { border-left-color: #94a3b8; opacity: 0.9; }
         .card-warn { border-left-color: #ef4444; }
         .encouragement { border-left-color: #10b981; font-style: italic; background: linear-gradient(to right, rgba(16, 185, 129, 0.15), transparent); font-size: 1.4rem; color: #d1fae5; }
@@ -142,17 +139,32 @@ initDatePicker();
 
 const fullDB = {
     1: { n: "大樹 (屬木)", f: "獨立、果斷、領袖特質。對事不對人，重視數據及結果。", mk: "講重點、專業導向、給予高度尊重。", w: "主觀意識過強、聽不進建議、容易孤軍奮戰。", l: "缺乏主見、易受人影響、較難獨力完成任務。", a: "練習獨立思考，學著為自己的選擇負責，建立核心自信。", e: "你是天生的領袖，你的果斷將開闢出專屬的道路！" },
-    2: { n: "蔓藤 (屬木)", f: "溫和圓融、細心、包容力強。重視交情程度與人際互動。", mk: "需要陪伴感、幫他做決定、溫柔持續跟進。", w: "優柔寡斷、過度依賴、說話容易得罪人而不自知。", l: "說話太直、不擅長讚美、人際互動較冷淡。", a: "多練習讚美他人，學習在群眾面前溫暖地表達自己。", e: "你的細膩是溫柔的力量，肯定自己，你會更強大。" },
+    2: { n: "蔓藤 (屬木)", f: "溫和圓融、細心、包容力強。重視交情程度與人際互動。", mk: "需要陪伴感、幫他做決定、溫柔持續跟進。", w: "優憂寡斷、過度依賴、說話容易得罪人而不自知。", l: "說話太直、不擅長讚美、人際互動較冷淡。", a: "多練習讚美他人，學習在群眾面前溫暖地表達自己。", e: "你的細膩是溫柔的力量，肯定自己，你會更強大。" },
     3: { n: "大火 (屬火)", f: "活潑創意、熱情、天馬行空。感性大於理性，容易受情緒啟蒙。", mk: "有趣內容、視覺化呈現、強調新奇與快樂。", w: "情緒化、沒耐性、專注力容易被新事物分散。", l: "缺乏聯想力、生活較無趣、幽默感較低。", a: "多接觸藝術、美感事物，學習靜心以提升定力。", e: "你的熱情能點亮所有人！保持赤子之心，世界就是你的畫布。" },
     4: { n: "燭火 (屬火)", f: "穩重責任、條理分明。擅長在既定框架內執行，極佳執行者。", mk: "提供完整邏輯架構、數據支持、給予安全感。", w: "過於固執、鑽牛角尖、害怕未知的改變。", l: "缺乏安全感、容易緊張、生活缺乏重心。", a: "建立規律的生活節奏，學習情緒管理與內在自信。", e: "你是最可靠的基石，務實會為你累積出驚人的成就。" },
     5: { n: "驛土 (屬土)", f: "自由奔放、人際圓滿。不喜束縛，追求出眾與讚美。", mk: "投其所好、建立私交、不想被管、節奏要快。", w: "三分鐘熱度、隨遇而安、心口不一。", l: "企圖心弱、安於現狀、不喜變動。", a: "設定短期且明確的目標，並強制自己執行計畫。", e: "自由是你的靈魂，冒險是你的養分。最美風景就在轉彎處。" },
     6: { n: "軟土 (屬土)", f: "體貼善良、完美主義。母愛性強，習慣照顧他人勝過自己。", mk: "談感性面、強調服務與保障、不給壓力。", w: "容易情緒勒索、愛碎念、因過度承擔而疲憊。", l: "不喜跨出舒適圈、預設定場多、較為被動。", a: "嘗試跨出舒適圈，接受不完美中的美感。", e: "治癒他人的同時也請愛自己，你值得被這世界溫柔對待。" },
     7: { n: "大金 (屬金)", f: "謹慎分析、追根究柢。理性務實，重視高品質與細節。", mk: "數據要準確、分析要務實、重視質感與證據。", w: "疑心病重、顯得冷漠、愛抓他人語病。", l: "容易漏財、天生路痴、較難信任他人。", a: "養成記帳習慣，練習開放心胸去信任與交友。", e: "智慧能看穿本質，保持觀察力，你必能做對決定。" },
     8: { n: "熟金 (屬金)", f: "統籌規劃、掌控慾強。機會主義者，重視結果、效率與大格局。", mk: "談大計畫、談效率回報、給予主導權。", w: "控制狂、急功近利、對人壓迫感較大。", l: "凡事親力親為導致勞碌、缺乏效率概念。", a: "學習充分授權，放慢步調，享受生活與當下。", e: "你有掌控大局的氣度。學會舉重若輕，事業將更上一層樓。" },
-    9: { n: "智水 (屬水)", f: "利他分享、大愛奉獻。想像力豐富，具備大愛精神。", mk: "談論夢夢、公益利他、尋求其助人本質。", w: "不切實際、多想少做、濫好人、缺乏金錢觀。", l: "對未來沒概念、月光族、較為現實。", a: "學習規劃未來，多參與志工或分享活動回饋社會。", e: "善良與智慧是珍貴禮物，帶著夢想前行，你會讓世界更美。" }
+    9: { n: "智水 (屬水)", f: "利他分享、大愛奉獻。想像力豐富，具備大愛精神。", mk: "談論夢想、公益利他、尋求其助人本質。", w: "不切實際、多想少做、濫好人、缺乏金錢觀。", l: "對未來沒概念、月光族、較為現實。", a: "學習規劃未來，多參與志工或分享活動回饋社會。", e: "善良與智慧是珍貴禮物，帶著夢想前行，你會讓世界更美。" }
 };
 
-const linesArr = [{n:"藝術",p:[1,2,3]},{n:"組織",p:[4,5,6]},{n:"權力",p:[7,8,9]},{n:"物質",p:[1,4,7]},{n:"情感",p:[2,5,8]},{n:"智慧",p:[3,6,9]},{n:"事業",p:[1,5,9]},{n:"人際",p:[3,5,7]}];
+const linesDB = {
+    "123": { n: "123 體藝連線", d: "美感藝術，喜歡美食，重視家人與生活品質，求好心切。「做事要求完美，容易領一個人的薪水卻做兩個人的工作」。", s: "重視工作細節，對美的部分很喜歡。視工作空間為重要環境，音樂藝術，重視家人。很會賺錢，但付出及所得應成正比。" },
+    "456": { n: "456 組織連線", d: "協調安撫，帶人帶心，和同事相處融洽。肯做打拼，老關的得力助手，經常受到老開器重。", s: "一人之下萬人之上。沒有456容易眼高手低，需要磨練階段要願意吃苦。" },
+    "789": { n: "789 權力連線", d: "長輩緣好，老闆格局，領導特質，擅長規劃與管理。經常被重用，「希望能擔任主管，或是擁有自己的事業」。", s: "容易得到長輩的關照。" },
+    "147": { n: "147 物質連線", d: "四方貴人多，招財貓，去餐廳吃飯時客人會變多，老闆開心或員工開心。理性思考，就事論事，看重數據與金錢價值。", s: "如果你今天是開店的人，會賺錢。開行動店面、人氣強、自行創業、容易得到底下的信任。" },
+    "258": { n: "258 情感連線", d: "人際公關，重情重義，情義相挺。說話有影響力，容易揪團購，擁有許多鐵粉。", s: "喊水結凍，有影響力的人。主揪或被主揪的人。重朋友、重交情、惜情之人。會不會覺得別人對你好三分，你會回十分？" },
+    "369": { n: "369 智慧連線", d: "溫暖體貼，感覺敏銳，同理心強，追求靈性。容易被感動，會主動關心，喜歡幫助別人。", s: "貼心。走感覺路線，又沒有7的人，更容易漏財、相信別人。宗教、哲學，宇宙有產生共鳴。容易跟客戶產生共鳴，容易跟客戶當朋友。" },
+    "159": { n: "159 事業連線", d: "業務性質，主動積極，做事執著，閒不下來，享受忙碌。執行力強，有企圖心，具有業務特質。", s: "玩樂找事做。延伸：享受忙碌生活。事成目標型企圖心較強。" },
+    "357": { n: "357 人際連線", d: "機伶風趣，圓融好客，異性緣好。朋友多，與異性互動容易，且同時具有159特質。", s: "有357+789連線，容易找長輩及異性緣。" }
+};
+
+const linesArr = [
+    {id:"123", p:[1,2,3]}, {id:"456", p:[4,5,6]}, {id:"789", p:[7,8,9]},
+    {id:"147", p:[1,4,7]}, {id:"258", p:[2,5,8]}, {id:"369", p:[3,6,9]},
+    {id:"159", p:[1,5,9]}, {id:"357", p:[3,5,7]}
+];
 
 function process() {
     const name = document.getElementById('userName').value || "朋友";
@@ -185,19 +197,41 @@ function process() {
     document.getElementById('resNum').innerText = `${cur}`;
     document.getElementById('resTitle').innerText = m.n;
 
+    // 基本特質
     let dH = `
-        <div class="section-title">✨ 特質與優點</div><div class="card">${m.f}</div>
+        <div class="section-title">✨ ${cur}號人特質與優點</div><div class="card">${m.f}</div>
         <div class="section-title">🤝 溝通錦囊</div><div class="card">${m.mk}</div>
     `;
 
+    // 連線特質分析
+    let lineResults = "";
+    linesArr.forEach(l => {
+        if(cnt[l.p[0]]>0 && cnt[l.p[1]]>0 && cnt[l.p[2]]>0) {
+            const lData = linesDB[l.id];
+            lineResults += `
+                <div class="card card-line">
+                    <b>⚡️ ${lData.n}：</b><br>${lData.d}<br>
+                    <i style="font-size:0.95rem; opacity:0.9;">💡 深度延伸：${lData.s}</i>
+                </div>`;
+        }
+    });
+    if(lineResults) dH += `<div class="section-title">🔗 已開啟連線特質</div>` + lineResults;
+
+    // 缺數
     let lackH = "";
     for(let i=1; i<=9; i++) {
         if(cnt[i] === 0) {
-            lackH += `<div class="card card-lack"><b>缺 ${i}：${fullDB[i].n}</b><br>影響：${fullDB[i].l}<br>💡 補強建議：${fullDB[i].a}</div>`;
+            let lackEffect = fullDB[i].l;
+            // 補充筆記中的缺數特質
+            if(i===3||i===6||i===9) lackEffect = "較冷漠、較被動、不喜與人互動。 " + lackEffect;
+            if(i===2||i===5||i===8) lackEffect = "人際較有隔閡，建議多參加社交圈。 " + lackEffect;
+            
+            lackH += `<div class="card card-lack"><b>缺 ${i}：${fullDB[i].n}</b><br>影響：${lackEffect}<br>💡 補強建議：${fullDB[i].a}</div>`;
         }
     }
     if(lackH) dH += `<div class="section-title">🛠 缺數能量修煉</div>` + lackH;
 
+    // 過強
     let warns = "";
     for(let i=1; i<=9; i++) {
         if(cnt[i] >= 3) {
@@ -206,9 +240,14 @@ function process() {
     }
     if(warns) dH += `<div class="section-title">🛑 能量平衡建議</div>` + warns;
 
+    // 鼓勵
     dH += `<div class="section-title">🌈 給你的靈魂鼓勵</div><div class="card encouragement">「${m.e}」</div>`;
-    document.getElementById('details').innerHTML = dH;
     
+    // 額外備註 (依據筆記)
+    if(cnt[1]>0 && cnt[2]>0 && cnt[3]>0) dH += `<div class="card card-line" style="border-left-color:#10b981;"><b>🎯 做事風格備註：</b><br>你有123連線，做事力求完美且重視細節（慢慢做）。</div>`;
+    if(cnt[1]>0 && cnt[5]>0 && cnt[9]>0) dH += `<div class="card card-line" style="border-left-color:#10b981;"><b>🎯 做事風格備註：</b><br>你有159連線，重視結果（粗心但更重結果）。</div>`;
+
+    document.getElementById('details').innerHTML = dH;
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -220,7 +259,6 @@ function renderGrid(cnt) {
         let clr = i<=2?'c-wood':i<=4?'c-fire':i<=6?'c-earth':i<=8?'c-metal':'c-water';
         let circles = '';
         for(let j=1; j<=Math.min(cnt[i], 3); j++) circles += `<div class="concentric c${j}"></div>`;
-        // 將數字標籤放在 circles 後面，但透過 CSS z-index 浮上來
         gH += `<div class="cell ${clr}" id="cell-${i}"><span class="num-label">${i}</span>${circles}</div>`;
     }
     document.getElementById('grid').innerHTML = gH;
@@ -255,7 +293,7 @@ function captureCard() {
 function shareLine() {
     const name = document.getElementById('userName').value;
     const num = document.getElementById('resNum').innerText;
-    const text = `我是【${name}】，我的能量密碼是【${num} 號人】！這份分析包含家庭/工作/事業建議！\n${window.location.href}`;
+    const text = `我是【${name}】，我的能量密碼是【${num} 號人】！包含連線特質與全方位建議！\n${window.location.href}`;
     window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
 }
 </script>
